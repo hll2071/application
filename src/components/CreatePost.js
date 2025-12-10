@@ -4,47 +4,56 @@ import styles from './CreatePost.module.css';
 import { FileMediaIcon, CodeIcon } from '@primer/octicons-react';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
+import { dataService } from '@/lib/data-service';
 
 export default function CreatePost({ onPostCreated }) {
   const { data: session } = useSession();
   const [content, setContent] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [codeSnippet, setCodeSnippet] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!session) return null;
 
+  const handleImageClick = () => {
+    const url = window.prompt("Enter image URL:");
+    if (url) {
+      setImageUrl(url);
+      setCodeSnippet(""); // mutually exclusive for simplicity
+    }
+  };
+
+  const handleCodeClick = () => {
+    const code = window.prompt("Enter code snippet:");
+    if (code) {
+      setCodeSnippet(code);
+      setImageUrl(""); // mutually exclusive for simplicity
+    }
+  };
+
   const handleSubmit = async () => {
-    if (!content.trim()) return;
+    if (!content.trim() && !imageUrl && !codeSnippet) return;
 
     setIsSubmitting(true);
     try {
-      // API call to create post
-      /*
-      const res = await fetch('/api/posts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + session.accessToken
-        },
-        body: JSON.stringify({
-          caption: content,
-          type: 'text',
-        }),
-      });
-      
-      if (res.ok) {
-        setContent("");
-        if (onPostCreated) onPostCreated();
-      }
-      */
+      // Use the real session user, adapting it to the expected User interface if needed
+      const user = {
+        ...session.user,
+        id: session.user.email || 'unknown', // Fallback ID
+        username: session.user.name || 'Anonymous', // Fallback username
+        followers: 0,
+        following: 0
+      };
+      await dataService.createPost(content, user, imageUrl, codeSnippet);
 
-      // Simulating API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log("Post created:", content);
       setContent("");
-      alert("Post created! (Simulated)");
+      setImageUrl("");
+      setCodeSnippet("");
+      if (onPostCreated) onPostCreated();
 
     } catch (error) {
       console.error("Failed to create post:", error);
+      alert("Failed to create post");
     } finally {
       setIsSubmitting(false);
     }
@@ -63,12 +72,19 @@ export default function CreatePost({ onPostCreated }) {
           disabled={isSubmitting}
         />
       </div>
+      {(imageUrl || codeSnippet) && (
+        <div style={{ marginTop: '10px', fontSize: '12px', color: '#666', padding: '0 10px' }}>
+          {imageUrl && <span>📷 Image attached</span>}
+          {codeSnippet && <span>💻 Code attached</span>}
+          <button onClick={() => { setImageUrl(""); setCodeSnippet(""); }} style={{ marginLeft: '10px', color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}>Remove</button>
+        </div>
+      )}
       <div className={styles.actions}>
         <div className={styles.mediaButtons}>
-          <button className={styles.mediaButton}>
+          <button className={styles.mediaButton} onClick={handleImageClick}>
             <FileMediaIcon size={16} /> Photo/Video
           </button>
-          <button className={styles.mediaButton}>
+          <button className={styles.mediaButton} onClick={handleCodeClick}>
             <CodeIcon size={16} /> Code Snippet
           </button>
         </div>

@@ -6,10 +6,10 @@ export default function PostCard({ post }) {
         <div className={styles.card}>
             <div className={styles.header}>
                 <div className={styles.userInfo}>
-                    <img src={post.user.avatar} alt={post.user.name} className={styles.avatar} />
+                    <img src={post.author?.image || post.user?.avatar} alt={post.author?.name || post.user?.name} className={styles.avatar} />
                     <div className={styles.userMeta}>
-                        <span className={styles.username}>{post.user.name}</span>
-                        <span className={styles.timestamp}>{post.timestamp}</span>
+                        <span className={styles.username}>{post.author?.name || post.user?.name}</span>
+                        <span className={styles.timestamp}>{new Date(post.createdAt || post.timestamp).toLocaleDateString()}</span>
                     </div>
                 </div>
                 <button className={styles.moreButton}>
@@ -18,13 +18,19 @@ export default function PostCard({ post }) {
             </div>
 
             <div className={styles.content}>
-                {post.content.type === 'image' ? (
+                {post.image ? (
                     <div className={styles.imageContainer}>
-                        <img src={post.content.url} alt="Post content" className={styles.postImage} />
+                        <img src={post.image} alt="Post content" className={styles.postImage} />
+                    </div>
+                ) : post.code ? (
+                    <div className={styles.codeBlock}>
+                        <pre style={{ backgroundColor: '#f6f8fa', padding: '16px', borderRadius: '6px', overflow: 'auto' }}>
+                            <code>{post.code}</code>
+                        </pre>
                     </div>
                 ) : (
-                    <div className={styles.codeBlock}>
-                        <pre><code>{post.content.code}</code></pre>
+                    <div className={styles.textContent}>
+                        <p>{post.content}</p>
                     </div>
                 )}
             </div>
@@ -49,7 +55,7 @@ export default function PostCard({ post }) {
             <div className={styles.footer}>
                 <div className={styles.likes}>{post.likes.toLocaleString()} likes</div>
                 <div className={styles.caption}>
-                    <span className={styles.captionUsername}>{post.user.name}</span> {post.content.caption}
+                    <span className={styles.captionUsername}>{post.author?.name}</span> {post.content}
                 </div>
                 <button className={styles.viewComments}>View all {post.comments} comments</button>
                 <div className={styles.addComment}>
