@@ -1,0 +1,84 @@
+.container {
+    background-color: var(--color-canvas-default);
+    border: 1px solid var(--color-border-default);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.inputRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border-muted);
+}
+
+.input {
+    flex: 1;
+    border: 1px solid var(--color-border-default);
+    border-radius: 6px;
+    padding: 8px 12px;
+    background-color: var(--color-canvas-subtle);
+    color: var(--color-fg-default);
+    font-size: 14px;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-accent-fg);
+    background-color: var(--color-canvas-default);
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-border-muted);
+    padding-top: 12px;
+}
+
+.mediaButtons {
+    display: flex;
+    gap: 8px;
+}
+
+.mediaButton {
+    background: none;
+    border: none;
+    color: var(--color-fg-muted);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.mediaButton:hover {
+    background-color: var(--color-canvas-subtle);
+    color: var(--color-fg-default);
+}
+
+.postButton {
+    background-color: #2da44e;
+    color: white;
+    border: 1px solid rgba(27, 31, 36, 0.15);
+    border-radius: 6px;
+    padding: 5px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.postButton:hover {
+    background-color: #2c974b;
+}

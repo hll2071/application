@@ -1,0 +1,161 @@
+.card {
+    background-color: var(--color-canvas-default);
+    border: 1px solid var(--color-border-default);
+    border-radius: 6px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border-muted);
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border-muted);
+}
+
+.userMeta {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-fg-default);
+}
+
+.timestamp {
+    font-size: 12px;
+    color: var(--color-fg-muted);
+}
+
+.moreButton {
+    background: none;
+    border: none;
+    color: var(--color-fg-muted);
+    cursor: pointer;
+}
+
+.content {
+    background-color: var(--color-canvas-subtle);
+}
+
+.imageContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: black;
+}
+
+.postImage {
+    max-width: 100%;
+    max-height: 600px;
+    object-fit: contain;
+}
+
+.codeBlock {
+    padding: 24px;
+    background-color: var(--color-canvas-subtle);
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+    font-size: 14px;
+    color: var(--color-fg-default);
+}
+
+.actions {
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 16px;
+}
+
+.actionButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-fg-default);
+    padding: 0;
+}
+
+.actionButton:hover {
+    color: var(--color-fg-muted);
+}
+
+.footer {
+    padding: 0 16px 16px;
+}
+
+.likes {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.caption {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.captionUsername {
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.viewComments {
+    background: none;
+    border: none;
+    color: var(--color-fg-muted);
+    font-size: 14px;
+    padding: 0;
+    cursor: pointer;
+    margin-bottom: 12px;
+}
+
+.addComment {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--color-border-muted);
+    padding-top: 12px;
+}
+
+.commentInput {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 14px;
+    outline: none;
+    color: var(--color-fg-default);
+}
+
+.postButton {
+    background: none;
+    border: none;
+    color: var(--color-accent-fg);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.postButton:hover {
+    opacity: 1;
+}

@@ -1,0 +1,161 @@
+.sidebar {
+    width: 296px;
+    /* Standard GitHub sidebar width */
+    padding: 24px;
+    background-color: var(--color-canvas-subtle);
+    /* Usually sidebar is subtle bg on dashboard */
+    border-right: 1px solid var(--color-border-default);
+    height: calc(100vh - 62px);
+    /* Full height minus header */
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+/* On dashboard, sidebar is actually on the left but transparent/same bg as body usually, 
+   but let's make it distinct or match GitHub's dashboard layout which has a left column.
+   GitHub dashboard left column is ~350px.
+*/
+.sidebar {
+    background-color: transparent;
+    /* Matches body bg */
+    border-right: none;
+    /* Dashboard sidebar doesn't have a border usually, just spacing */
+}
+
+.section {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border-muted);
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.sectionTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-fg-default);
+}
+
+.newButton {
+    background-color: #2da44e;
+    color: white;
+    border: 1px solid rgba(27, 31, 36, 0.15);
+    border-radius: 6px;
+    padding: 3px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.newButton:hover {
+    background-color: #2c974b;
+}
+
+.repoInputContainer {
+    margin-bottom: 8px;
+}
+
+.repoInput {
+    width: 100%;
+    padding: 5px 12px;
+    border: 1px solid var(--color-border-default);
+    border-radius: 6px;
+    background-color: var(--color-canvas-default);
+    color: var(--color-fg-default);
+    font-size: 14px;
+}
+
+.repoList {
+    list-style: none;
+}
+
+.repoItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.repoIcon {
+    color: var(--color-fg-muted);
+}
+
+.repoName {
+    font-size: 14px;
+    color: var(--color-fg-default);
+    font-weight: 600;
+}
+
+.repoName:hover {
+    text-decoration: underline;
+    color: var(--color-accent-fg);
+}
+
+.showMore {
+    background: none;
+    border: none;
+    color: var(--color-fg-muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.showMore:hover {
+    color: var(--color-accent-fg);
+}
+
+.activityBox {
+    border: 1px dashed var(--color-border-default);
+    border-radius: 6px;
+    padding: 16px;
+    text-align: center;
+}
+
+.activityText {
+    font-size: 12px;
+    color: var(--color-fg-muted);
+}
+
+.footer {
+    font-size: 12px;
+    color: var(--color-fg-muted);
+    border-top: 1px solid var(--color-border-muted);
+    padding-top: 24px;
+}
+
+.footerLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    /* Spacing between links */
+    margin-top: 8px;
+}
+
+.footerLinks a {
+    color: var(--color-fg-muted);
+    text-decoration: none;
+}
+
+.footerLinks a:hover {
+    color: var(--color-accent-fg);
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+        /* Hide sidebar on mobile */
+    }
+}

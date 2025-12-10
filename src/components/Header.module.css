@@ -1,0 +1,162 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    /* Increased padding for better spacing */
+    background-color: var(--color-header-bg);
+    color: var(--color-header-text);
+    font-size: 14px;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.menuButton {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: none;
+    /* Hidden on desktop */
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.searchContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.searchInput {
+    background-color: var(--color-header-search-bg);
+    border: 1px solid var(--color-header-search-border);
+    border-radius: 6px;
+    color: var(--color-header-text);
+    padding: 5px 12px;
+    width: 280px;
+    /* Wider search bar */
+    font-size: 14px;
+    transition: width 0.2s ease-in-out;
+}
+
+.searchInput:focus {
+    width: 400px;
+    background-color: var(--color-canvas-default);
+    color: var(--color-fg-default);
+    outline: none;
+    border-color: var(--color-accent-fg);
+}
+
+.searchSlash {
+    position: absolute;
+    right: 8px;
+    border: 1px solid var(--color-header-search-border);
+    border-radius: 4px;
+    padding: 0 4px;
+    font-size: 10px;
+    color: var(--color-fg-muted);
+}
+
+.nav {
+    display: flex;
+    gap: 16px;
+    font-weight: 600;
+}
+
+.nav a {
+    color: var(--color-header-text);
+    text-decoration: none;
+}
+
+.nav a:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.iconButton {
+    background: none;
+    border: 1px solid var(--color-header-search-border);
+    /* Added border */
+    border-radius: 6px;
+    /* Rounded corners */
+    color: var(--color-header-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    /* Added padding */
+}
+
+.iconButton:hover {
+    border-color: var(--color-fg-muted);
+}
+
+.avatarButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--color-header-text);
+    /* Added border to avatar */
+}
+
+.dropdownArrow {
+    font-size: 10px;
+    margin-left: 2px;
+}
+
+@media (max-width: 768px) {
+    .nav {
+        display: none;
+    }
+
+    .menuButton {
+        display: block;
+    }
+
+    .searchInput {
+        width: 150px;
+    }
+
+    .searchInput:focus {
+        width: 200px;
+    }
+}
+
+.loginButton {
+    background-color: transparent;
+    color: var(--color-header-text);
+    border: 1px solid var(--color-header-text);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.loginButton:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}

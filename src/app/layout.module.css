@@ -1,0 +1,27 @@
+.container {
+    display: flex;
+    max-width: 1280px;
+    /* Standard GitHub max-width */
+    margin: 0 auto;
+    padding-top: 24px;
+    /* Space below header (header is not fixed in this simple version, but if it was we'd need margin-top) */
+    /* If header is not fixed, this padding is just spacing from the top of the container */
+}
+
+.mainContent {
+    flex: 1;
+    padding: 0 24px;
+    min-width: 0;
+    /* Prevent flex child from overflowing */
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding-top: 0;
+    }
+
+    .mainContent {
+        padding: 16px;
+    }
+}
