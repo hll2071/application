@@ -4,82 +4,55 @@ import styles from './Sidebar.module.css';
 import { RepoIcon, BookIcon } from '@primer/octicons-react';
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
+import { dataService } from '@/lib/data-service';
 
 
 
 export default function Sidebar() {
     const { data: session } = useSession();
     const [repos, setRepos] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [activities, setActivities] = useState([]);
 
     useEffect(() => {
-        async function fetchRepos() {
-            if (session?.accessToken) {
-                setLoading(true);
-                try {
-                    const res = await fetch('https://api.github.com/user/repos?sort=updated&per_page=7', {
-                        headers: {
-                            Authorization: `Bearer ${session.accessToken}`,
-                        },
-                    });
-                    if (res.ok) {
-                        const data = await res.json();
-                        setRepos(data);
-                    }
-                } catch (error) {
-                    console.error("Failed to fetch repos", error);
-                } finally {
-                    setLoading(false);
-                }
-            }
+        async function fetchActivities() {
+            const data = await dataService.getActivities();
+            setActivities(data);
         }
 
-        if (session) {
-            fetchRepos();
-        }
-    }, [session]);
+        fetchActivities();
 
+        const handleActivityUpdate = () => {
+            fetchActivities();
+        };
 
+        window.addEventListener('activity-updated', handleActivityUpdate);
+        return () => window.removeEventListener('activity-updated', handleActivityUpdate);
+    }, []);
 
     return (
         <aside className={styles.sidebar}>
-            {session && (
-                <div className={styles.section}>
-                    <div className={styles.sectionHeader}>
-                        <h2 className={styles.sectionTitle}>Your Repositories</h2>
-                        <button className={styles.newButton}>
-                            <RepoIcon size={16} /> New
-                        </button>
-                    </div>
-                    <div className={styles.repoInputContainer}>
-                        <input type="text" placeholder="Find a repository..." className={styles.repoInput} />
-                    </div>
-                    <ul className={styles.repoList}>
-                        {loading ? (
-                            <li className={styles.loading}>Loading...</li>
-                        ) : (
-                            repos.map((repo) => (
-                                <li key={repo.id || repo.name} className={styles.repoItem}>
-                                    <div className={styles.repoIcon}>
-                                        {repo.private ? <BookIcon size={16} /> : <RepoIcon size={16} />}
-                                    </div>
-                                    <a href={repo.html_url || "#"} className={styles.repoName}>
-                                        {repo.full_name || repo.name}
-                                    </a>
-                                </li>
-                            ))
-                        )}
-                    </ul>
-                    <button className={styles.showMore}>Show more</button>
-                </div>
-            )}
+            {/* ... repo section ... */}
 
             <div className={styles.section}>
                 <h2 className={styles.sectionTitle}>Recent activity</h2>
-                <div className={styles.activityBox}>
-                    <p className={styles.activityText}>When you have activity, we'll show it here.</p>
-                </div>
+                {activities.length === 0 ? (
+                    <div className={styles.activityBox}>
+                        <p className={styles.activityText}>When you have activity, we'll show it here.</p>
+                    </div>
+                ) : (
+                    <ul className={styles.activityList}>
+                        {activities.map(activity => (
+                            <li key={activity.id} className={styles.activityItem} style={{ marginBottom: '10px', fontSize: '13px' }}>
+                                <div style={{ fontWeight: '600', marginBottom: '2px' }}>{activity.description}</div>
+                                <div style={{ color: '#666', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{activity.text}</div>
+                                <div style={{ fontSize: '11px', color: '#888', marginTop: '2px' }}>{new Date(activity.timestamp).toLocaleTimeString()}</div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
+
+
 
             <div className={styles.footer}>
                 <p>© 2025 GitHub, Inc.</p>

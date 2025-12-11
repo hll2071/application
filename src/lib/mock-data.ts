@@ -31,6 +31,13 @@ export interface Comment {
     createdAt: string;
 }
 
+export interface Activity {
+    id: string;
+    text: string;
+    description: string;
+    timestamp: string;
+}
+
 export interface Post {
     id: string;
     content: string;
@@ -38,6 +45,7 @@ export interface Post {
     createdAt: string;
     likes: number;
     hasLiked?: boolean;
+    hasBookmarked?: boolean;
     comments: number;
     commentsList?: Comment[];
     image?: string;

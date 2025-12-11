@@ -5,6 +5,7 @@ const STORAGE_KEYS = {
     FEED: 'github_clone_feed_v2',
     USER: 'github_clone_user_v2',
     REPOS: 'github_clone_repos_v2',
+    ACTIVITY: 'github_clone_activity_v2',
 };
 
 // Simulate network delay
@@ -112,6 +113,46 @@ class MockDataService {
         this.setStorage(STORAGE_KEYS.FEED, updatedFeed);
         if (!updatedPost) throw new Error("Post not found");
         return updatedPost;
+    }
+
+    async getActivities(): Promise<import('./mock-data').Activity[]> {
+        await delay(200);
+        return this.getStorage(STORAGE_KEYS.ACTIVITY, []);
+    }
+
+    async addToActivity(text: string, description: string): Promise<void> {
+        // No artificial delay for snappier UI
+        const currentActivities = this.getStorage(STORAGE_KEYS.ACTIVITY, []);
+        const newActivity = {
+            id: `activity-${Date.now()}`,
+            text,
+            description,
+            timestamp: new Date().toISOString()
+        };
+        const updatedActivities = [newActivity, ...currentActivities].slice(0, 10); // Keep last 10
+        this.setStorage(STORAGE_KEYS.ACTIVITY, updatedActivities);
+
+        // Dispatch custom event for real-time updates
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('activity-updated'));
+        }
+    }
+
+    async toggleBookmark(postId: string): Promise<boolean> {
+        await delay(200);
+        const currentFeed = await this.getFeed();
+        let isBookmarked = false;
+
+        const updatedFeed = currentFeed.map(post => {
+            if (post.id === postId) {
+                isBookmarked = !post.hasBookmarked;
+                return { ...post, hasBookmarked: isBookmarked };
+            }
+            return post;
+        });
+
+        this.setStorage(STORAGE_KEYS.FEED, updatedFeed);
+        return isBookmarked;
     }
 }
 

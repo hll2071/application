@@ -11,8 +11,30 @@ export default function PostCard({ post }) {
     const [comments, setComments] = useState(post.commentsList || []);
     const [commentCount, setCommentCount] = useState(post.comments);
     const [showComments, setShowComments] = useState(false);
-    const [commentText, setCommentText] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isBookmarked, setIsBookmarked] = useState(post.hasBookmarked || false);
+
+    const handleBookmark = async () => {
+        const newBookmarked = !isBookmarked;
+        setIsBookmarked(newBookmarked);
+
+        try {
+            await dataService.toggleBookmark(post.id);
+            if (newBookmarked) {
+                // Add to recent activity
+                await dataService.addToActivity(
+                    `Bookmarked: ${post.content}`,
+                    `You bookmarked a post by ${post.author?.name || post.user?.name}`
+                );
+            }
+        } catch (error) {
+            console.error("Failed to bookmark", error);
+            setIsBookmarked(!newBookmarked);
+        }
+    };
+
+    // ... inside return ...
+
+
 
     const handleLike = async () => {
         // Optimistic update
@@ -104,8 +126,8 @@ export default function PostCard({ post }) {
                     </button>
                     {/* Share button removed */}
                 </div>
-                <button className={styles.actionButton}>
-                    <BookmarkIcon size={24} />
+                <button className={styles.actionButton} onClick={handleBookmark}>
+                    {isBookmarked ? <BookmarkIcon size={24} fill="currentColor" /> : <BookmarkIcon size={24} />}
                 </button>
             </div>
 
