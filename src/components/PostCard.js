@@ -1,5 +1,5 @@
 import styles from './PostCard.module.css';
-import { HeartIcon, CommentIcon, BookmarkIcon, KebabHorizontalIcon } from '@primer/octicons-react';
+import { HeartIcon, HeartFillIcon, CommentIcon, BookmarkIcon, KebabHorizontalIcon } from '@primer/octicons-react';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { dataService } from '@/lib/data-service';
@@ -93,7 +93,11 @@ export default function PostCard({ post }) {
             <div className={styles.actions}>
                 <div className={styles.actionButtons}>
                     <button className={styles.actionButton} onClick={handleLike}>
-                        <HeartIcon size={24} fill={hasLiked ? "red" : "none"} className={hasLiked ? styles.liked : ""} />
+                        {hasLiked ? (
+                            <HeartFillIcon size={24} fill="#fa4549" />
+                        ) : (
+                            <HeartIcon size={24} />
+                        )}
                     </button>
                     <button className={styles.actionButton} onClick={() => setShowComments(!showComments)}>
                         <CommentIcon size={24} />
