@@ -24,13 +24,22 @@ export interface Repository {
     };
 }
 
+export interface Comment {
+    id: string;
+    text: string;
+    author: User;
+    createdAt: string;
+}
+
 export interface Post {
     id: string;
     content: string;
     author: User;
     createdAt: string;
     likes: number;
+    hasLiked?: boolean;
     comments: number;
+    commentsList?: Comment[];
     image?: string;
     code?: string;
 }
@@ -88,28 +97,4 @@ export const MOCK_REPOS: Repository[] = [
     }
 ];
 
-export const MOCK_FEED: Post[] = [
-    {
-        id: "post-1",
-        content: "Just shipped a new feature! 🚀 #coding #webdev",
-        author: MOCK_USER,
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
-        likes: 15,
-        comments: 3
-    },
-    {
-        id: "post-2",
-        content: "Exploring the new features in Next.js 14. Really suspect server actions are the future.",
-        author: {
-            ...MOCK_USER,
-            id: "mock-user-2",
-            name: "Jane Doe",
-            username: "jane-doe",
-            image: "https://avatars.githubusercontent.com/u/2?v=4"
-        },
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
-        likes: 42,
-        comments: 8,
-        image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&auto=format&fit=crop"
-    }
-];
+export const MOCK_FEED: Post[] = [];

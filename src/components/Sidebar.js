@@ -5,15 +5,7 @@ import { RepoIcon, BookIcon } from '@primer/octicons-react';
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
 
-const mockRepos = [
-    { name: 'hsm/github-clone', private: false },
-    { name: 'hsm/awesome-project', private: true },
-    { name: 'facebook/react', private: false },
-    { name: 'vercel/next.js', private: false },
-    { name: 'hsm/portfolio', private: false },
-    { name: 'google/gemini', private: true },
-    { name: 'hsm/notes', private: true },
-];
+
 
 export default function Sidebar() {
     const { data: session } = useSession();
@@ -47,40 +39,40 @@ export default function Sidebar() {
         }
     }, [session]);
 
-    const displayRepos = session ? repos : mockRepos;
+
 
     return (
         <aside className={styles.sidebar}>
-            <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <h2 className={styles.sectionTitle}>
-                        {session ? "Your Repositories" : "Top Repositories"}
-                    </h2>
-                    <button className={styles.newButton}>
-                        <RepoIcon size={16} /> New
-                    </button>
+            {session && (
+                <div className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                        <h2 className={styles.sectionTitle}>Your Repositories</h2>
+                        <button className={styles.newButton}>
+                            <RepoIcon size={16} /> New
+                        </button>
+                    </div>
+                    <div className={styles.repoInputContainer}>
+                        <input type="text" placeholder="Find a repository..." className={styles.repoInput} />
+                    </div>
+                    <ul className={styles.repoList}>
+                        {loading ? (
+                            <li className={styles.loading}>Loading...</li>
+                        ) : (
+                            repos.map((repo) => (
+                                <li key={repo.id || repo.name} className={styles.repoItem}>
+                                    <div className={styles.repoIcon}>
+                                        {repo.private ? <BookIcon size={16} /> : <RepoIcon size={16} />}
+                                    </div>
+                                    <a href={repo.html_url || "#"} className={styles.repoName}>
+                                        {repo.full_name || repo.name}
+                                    </a>
+                                </li>
+                            ))
+                        )}
+                    </ul>
+                    <button className={styles.showMore}>Show more</button>
                 </div>
-                <div className={styles.repoInputContainer}>
-                    <input type="text" placeholder="Find a repository..." className={styles.repoInput} />
-                </div>
-                <ul className={styles.repoList}>
-                    {loading ? (
-                        <li className={styles.loading}>Loading...</li>
-                    ) : (
-                        displayRepos.map((repo) => (
-                            <li key={repo.id || repo.name} className={styles.repoItem}>
-                                <div className={styles.repoIcon}>
-                                    {repo.private ? <BookIcon size={16} /> : <RepoIcon size={16} />}
-                                </div>
-                                <a href={repo.html_url || "#"} className={styles.repoName}>
-                                    {session ? repo.full_name : repo.name}
-                                </a>
-                            </li>
-                        ))
-                    )}
-                </ul>
-                <button className={styles.showMore}>Show more</button>
-            </div>
+            )}
 
             <div className={styles.section}>
                 <h2 className={styles.sectionTitle}>Recent activity</h2>

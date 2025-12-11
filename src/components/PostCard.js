@@ -1,7 +1,62 @@
 import styles from './PostCard.module.css';
-import { HeartIcon, CommentIcon, ShareIcon, BookmarkIcon, KebabHorizontalIcon } from '@primer/octicons-react';
+import { HeartIcon, CommentIcon, BookmarkIcon, KebabHorizontalIcon } from '@primer/octicons-react';
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { dataService } from '@/lib/data-service';
 
 export default function PostCard({ post }) {
+    const { data: session } = useSession();
+    const [likes, setLikes] = useState(post.likes);
+    const [hasLiked, setHasLiked] = useState(post.hasLiked || false);
+    const [comments, setComments] = useState(post.commentsList || []);
+    const [commentCount, setCommentCount] = useState(post.comments);
+    const [showComments, setShowComments] = useState(false);
+    const [commentText, setCommentText] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleLike = async () => {
+        // Optimistic update
+        const newHasLiked = !hasLiked;
+        setHasLiked(newHasLiked);
+        setLikes(prev => newHasLiked ? prev + 1 : Math.max(0, prev - 1));
+
+        try {
+            await dataService.likePost(post.id);
+        } catch (error) {
+            console.error("Failed to like post", error);
+            // Revert on error
+            setHasLiked(!newHasLiked);
+            setLikes(prev => !newHasLiked ? prev + 1 : Math.max(0, prev - 1));
+        }
+    };
+
+    const handleComment = async () => {
+        if (!commentText.trim() || !session?.user) return;
+
+        setIsSubmitting(true);
+        try {
+            // Use real user or fallback
+            const user = {
+                ...session.user,
+                id: session.user.email || 'unknown',
+                username: session.user.name || 'Anonymous',
+                followers: 0,
+                following: 0
+            };
+
+            const updatedPost = await dataService.addComment(post.id, commentText, user);
+
+            setComments(updatedPost.commentsList || []);
+            setCommentCount(updatedPost.comments);
+            setCommentText("");
+            setShowComments(true); // Auto open comments
+        } catch (error) {
+            console.error("Failed to add comment", error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <div className={styles.card}>
             <div className={styles.header}>
@@ -37,15 +92,13 @@ export default function PostCard({ post }) {
 
             <div className={styles.actions}>
                 <div className={styles.actionButtons}>
-                    <button className={styles.actionButton}>
-                        <HeartIcon size={24} />
+                    <button className={styles.actionButton} onClick={handleLike}>
+                        <HeartIcon size={24} fill={hasLiked ? "red" : "none"} className={hasLiked ? styles.liked : ""} />
                     </button>
-                    <button className={styles.actionButton}>
+                    <button className={styles.actionButton} onClick={() => setShowComments(!showComments)}>
                         <CommentIcon size={24} />
                     </button>
-                    <button className={styles.actionButton}>
-                        <ShareIcon size={24} />
-                    </button>
+                    {/* Share button removed */}
                 </div>
                 <button className={styles.actionButton}>
                     <BookmarkIcon size={24} />
@@ -53,14 +106,45 @@ export default function PostCard({ post }) {
             </div>
 
             <div className={styles.footer}>
-                <div className={styles.likes}>{post.likes.toLocaleString()} likes</div>
+                <div className={styles.likes}>{likes.toLocaleString()} likes</div>
                 <div className={styles.caption}>
                     <span className={styles.captionUsername}>{post.author?.name}</span> {post.content}
                 </div>
-                <button className={styles.viewComments}>View all {post.comments} comments</button>
+
+                {commentCount > 0 && (
+                    <button className={styles.viewComments} onClick={() => setShowComments(!showComments)}>
+                        {showComments ? "Hide comments" : `View all ${commentCount} comments`}
+                    </button>
+                )}
+
+                {showComments && (
+                    <div className={styles.commentsList} style={{ marginTop: '10px', fontSize: '14px' }}>
+                        {comments.map(comment => (
+                            <div key={comment.id} style={{ marginBottom: '4px' }}>
+                                <span style={{ fontWeight: '600', marginRight: '5px' }}>{comment.author.name}</span>
+                                <span>{comment.text}</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 <div className={styles.addComment}>
-                    <input type="text" placeholder="Add a comment..." className={styles.commentInput} />
-                    <button className={styles.postButton}>Post</button>
+                    <input
+                        type="text"
+                        placeholder="Add a comment..."
+                        className={styles.commentInput}
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleComment()}
+                        disabled={isSubmitting}
+                    />
+                    <button
+                        className={styles.postButton}
+                        onClick={handleComment}
+                        disabled={!commentText.trim() || isSubmitting}
+                    >
+                        Post
+                    </button>
                 </div>
             </div>
         </div>
