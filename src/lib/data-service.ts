@@ -2,9 +2,9 @@
 import { MOCK_FEED, MOCK_REPOS, MOCK_USER, Post, Repository, User, Comment } from './mock-data';
 
 const STORAGE_KEYS = {
-    FEED: 'github_clone_feed',
-    USER: 'github_clone_user',
-    REPOS: 'github_clone_repos',
+    FEED: 'github_clone_feed_v2',
+    USER: 'github_clone_user_v2',
+    REPOS: 'github_clone_repos_v2',
 };
 
 // Simulate network delay
